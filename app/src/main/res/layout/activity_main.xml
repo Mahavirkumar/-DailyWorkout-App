@@ -12,6 +12,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/flStart"
         android:layout_width="match_parent"
+        android:scaleType="fitXY"
         android:layout_height="220dp"
         android:contentDescription="@string/image"
         android:src="@drawable/ten_min_workout_main_logo" />
