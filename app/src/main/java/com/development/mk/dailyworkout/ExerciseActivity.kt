@@ -3,11 +3,15 @@ package com.development.mk.dailyworkout
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.speech.tts.TextToSpeech
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.development.mk.dailyworkout.databinding.ActivityExerciseBinding
+import java.util.*
+import kotlin.collections.ArrayList
 
-class ExerciseActivity : AppCompatActivity() {
+class ExerciseActivity : AppCompatActivity(),TextToSpeech.OnInitListener {
 
 
     private var restTimer: CountDownTimer? =
@@ -20,6 +24,7 @@ class ExerciseActivity : AppCompatActivity() {
 
     private var exerciseList: ArrayList<ExerciseModel>? = null // We will initialize the list later.
     private var currentExercisePosition = -1 // Current Position of Exercise.
+    private var tts: TextToSpeech? = null // Variable for Text to Speech
 
     // create a binding variable
     private var binding: ActivityExerciseBinding? = null
@@ -38,6 +43,7 @@ class ExerciseActivity : AppCompatActivity() {
         binding?.toolbarExercise?.setNavigationOnClickListener {
             onBackPressed()
         }
+        tts = TextToSpeech(this, this)
 
         exerciseList = Constants.defaultExerciseList()
         setupRestView()
@@ -51,6 +57,8 @@ class ExerciseActivity : AppCompatActivity() {
 
         binding?.flRestView?.visibility = View.VISIBLE
         binding?.tvTitle?.visibility = View.VISIBLE
+        binding?.upcomingLabel?.visibility = View.VISIBLE
+        binding?.tvUpcomingExerciseName?.visibility = View.VISIBLE
         binding?.tvExerciseName?.visibility = View.INVISIBLE
         binding?.flExerciseView?.visibility = View.INVISIBLE
         binding?.ivImage?.visibility = View.INVISIBLE
@@ -63,6 +71,10 @@ class ExerciseActivity : AppCompatActivity() {
             restTimer!!.cancel()
             restProgress = 0
         }
+
+        // Here we have set the upcoming exercise name to the text view
+        // Here as the current position is -1 by default so to selected from the list it should be 0 so we have increased it by +1.
+        binding?.tvUpcomingExerciseName?.text = exerciseList!![currentExercisePosition + 1].name
 
         // This function is used to set the progress details.
         setRestProgressBar()
@@ -110,6 +122,8 @@ class ExerciseActivity : AppCompatActivity() {
         // Here according to the view make it visible as this is Exercise View so exercise view is visible and rest view is not.
         binding?.flRestView?.visibility = View.INVISIBLE
         binding?.tvTitle?.visibility = View.INVISIBLE
+        binding?.tvUpcomingExerciseName?.visibility = View.INVISIBLE
+        binding?.upcomingLabel?.visibility = View.INVISIBLE
         binding?.tvExerciseName?.visibility = View.VISIBLE
         binding?.flExerciseView?.visibility = View.VISIBLE
         binding?.ivImage?.visibility = View.VISIBLE
@@ -122,6 +136,7 @@ class ExerciseActivity : AppCompatActivity() {
             exerciseTimer?.cancel()
             exerciseProgress = 0
         }
+        speakOut(exerciseList!![currentExercisePosition].name)
 
         binding?.ivImage?.setImageResource(exerciseList!![currentExercisePosition].image)
         binding?.tvExerciseName?.text = exerciseList!![currentExercisePosition].name
@@ -170,5 +185,31 @@ class ExerciseActivity : AppCompatActivity() {
         }
         super.onDestroy()
         binding = null
+    }
+
+    override fun onInit(status: Int) {
+
+        //  After variable initializing set the language after a "success"ful result.)
+
+        if (status == TextToSpeech.SUCCESS) {
+            // set US English as language for tts
+            val result = tts?.setLanguage(Locale.ENGLISH)
+
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Log.e("TTS", "The Language specified is not supported!")
+            }
+
+        } else {
+            Log.e("TTS", "Initialization Failed!")
+        }
+
+    }
+
+
+    /**
+     * Function is used to speak the text that we pass to it.
+     */
+    private fun speakOut(text: String) {
+        tts!!.speak(text, TextToSpeech.QUEUE_FLUSH, null, "")
     }
 }
