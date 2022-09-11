@@ -18,6 +18,9 @@ class ExerciseActivity : AppCompatActivity() {
     private var exerciseTimer: CountDownTimer? = null // Variable for Exercise Timer and later on we will initialize it.
     private var exerciseProgress = 0 // Variable for the exercise timer progress. As initial value the exercise progress is set to 0. As we are about to start.
 
+    private var exerciseList: ArrayList<ExerciseModel>? = null // We will initialize the list later.
+    private var currentExercisePosition = -1 // Current Position of Exercise.
+
     // create a binding variable
     private var binding: ActivityExerciseBinding? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +39,7 @@ class ExerciseActivity : AppCompatActivity() {
             onBackPressed()
         }
 
+        exerciseList = Constants.defaultExerciseList()
         setupRestView()
 
     }
@@ -44,6 +48,12 @@ class ExerciseActivity : AppCompatActivity() {
      * Function is used to set the timer for REST.
      */
     private fun setupRestView() {
+
+        binding?.flRestView?.visibility = View.VISIBLE
+        binding?.tvTitle?.visibility = View.VISIBLE
+        binding?.tvExerciseName?.visibility = View.INVISIBLE
+        binding?.flExerciseView?.visibility = View.INVISIBLE
+        binding?.ivImage?.visibility = View.INVISIBLE
 
         /**
          *  firstly we will check if the timer is running the and it is not null then cancel the running timer and start the new one.
@@ -76,16 +86,17 @@ class ExerciseActivity : AppCompatActivity() {
          *   {#onTick(long)} callbacks.
          */
         // Here we have started a timer of 10 seconds so the 10000 is milliseconds is 10 seconds and the countdown interval is 1 second so it 1000.
-        restTimer = object : CountDownTimer(10000, 1000) {
+        restTimer = object : CountDownTimer(15000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 restProgress++ // It is increased by 1
-                binding?.progressBar?.progress = 10 - restProgress // Indicates progress bar progress
+                binding?.progressBar?.progress = 15 - restProgress // Indicates progress bar progress
                 binding?.tvTimer?.text =
-                    (10 - restProgress).toString()  // Current progress is set to text view in terms of seconds.
+                    (15 - restProgress).toString()  // Current progress is set to text view in terms of seconds.
             }
 
             override fun onFinish() {
                 // When the 10 seconds will complete this will be executed.
+                currentExercisePosition++
                 setupExerciseView()
             }
         }.start()
@@ -97,9 +108,11 @@ class ExerciseActivity : AppCompatActivity() {
     private fun setupExerciseView() {
 
         // Here according to the view make it visible as this is Exercise View so exercise view is visible and rest view is not.
-        binding?.flProgressBar?.visibility = View.INVISIBLE
-        binding?.tvTitle?.text = "Exercise Name"
+        binding?.flRestView?.visibility = View.INVISIBLE
+        binding?.tvTitle?.visibility = View.INVISIBLE
+        binding?.tvExerciseName?.visibility = View.VISIBLE
         binding?.flExerciseView?.visibility = View.VISIBLE
+        binding?.ivImage?.visibility = View.VISIBLE
 
         /**
          * Here firstly we will check if the timer is running and it is not null then cancel the running timer and start the new one.
@@ -109,6 +122,9 @@ class ExerciseActivity : AppCompatActivity() {
             exerciseTimer?.cancel()
             exerciseProgress = 0
         }
+
+        binding?.ivImage?.setImageResource(exerciseList!![currentExercisePosition].image)
+        binding?.tvExerciseName?.text = exerciseList!![currentExercisePosition].name
 
         setExerciseProgressBar()
     }
@@ -120,19 +136,25 @@ class ExerciseActivity : AppCompatActivity() {
 
         binding?.progressBarExercise?.progress = exerciseProgress
 
-        exerciseTimer = object : CountDownTimer(30000, 1000) {
+        exerciseTimer = object : CountDownTimer(40000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 exerciseProgress++
-                binding?.progressBarExercise?.progress = 30 - exerciseProgress
-                binding?.tvTimerExercise?.text = (30 - exerciseProgress).toString()
+                binding?.progressBarExercise?.progress = 40 - exerciseProgress
+                binding?.tvTimerExercise?.text = (40 - exerciseProgress).toString()
             }
 
             override fun onFinish() {
-                Toast.makeText(
-                    this@ExerciseActivity,
-                    "This is 30 seconds completed so now we will add all the exercises.",
-                    Toast.LENGTH_SHORT
-                ).show()
+                //  Updating the view after completing the 30 seconds exercise.)
+                if (currentExercisePosition < exerciseList?.size!! - 1) {
+                    setupRestView()
+                } else {
+
+                    Toast.makeText(
+                        this@ExerciseActivity,
+                        "Congratulations! You have completed the 10 minutes workout.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         }.start()
     }
