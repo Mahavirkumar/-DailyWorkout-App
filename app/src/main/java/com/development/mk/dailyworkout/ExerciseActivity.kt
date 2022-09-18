@@ -9,6 +9,7 @@ import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.development.mk.dailyworkout.databinding.ActivityExerciseBinding
 import java.util.*
 import kotlin.collections.ArrayList
@@ -29,6 +30,8 @@ class ExerciseActivity : AppCompatActivity(),TextToSpeech.OnInitListener {
     private var tts: TextToSpeech? = null // Variable for Text to Speech
     // Declaring the variable of the media player for playing a notification sound when the exercise is about to start.)
     private var player: MediaPlayer? = null
+
+    private var exerciseAdapter: ExerciseStatusAdapter? = null
 
     // create a binding variable
     private var binding: ActivityExerciseBinding? = null
@@ -51,6 +54,8 @@ class ExerciseActivity : AppCompatActivity(),TextToSpeech.OnInitListener {
 
         exerciseList = Constants.defaultExerciseList()
         setupRestView()
+
+        setupExerciseStatusRecyclerView()
 
     }
 
@@ -120,12 +125,12 @@ class ExerciseActivity : AppCompatActivity(),TextToSpeech.OnInitListener {
          *   {#onTick(long)} callbacks.
          */
         // Here we have started a timer of 10 seconds so the 10000 is milliseconds is 10 seconds and the countdown interval is 1 second so it 1000.
-        restTimer = object : CountDownTimer(15000, 1000) {
+        restTimer = object : CountDownTimer(10000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 restProgress++ // It is increased by 1
-                binding?.progressBar?.progress = 15 - restProgress // Indicates progress bar progress
+                binding?.progressBar?.progress = 10 - restProgress // Indicates progress bar progress
                 binding?.tvTimer?.text =
-                    (15 - restProgress).toString()  // Current progress is set to text view in terms of seconds.
+                    (10 - restProgress).toString()  // Current progress is set to text view in terms of seconds.
             }
 
             override fun onFinish() {
@@ -244,5 +249,23 @@ class ExerciseActivity : AppCompatActivity(),TextToSpeech.OnInitListener {
      */
     private fun speakOut(text: String) {
         tts!!.speak(text, TextToSpeech.QUEUE_FLUSH, null, "")
+    }
+
+    /**
+     * Function is used to set up the recycler view to UI and asining the Layout Manager and Adapter Class is attached to it.
+     */
+
+    private fun setupExerciseStatusRecyclerView() {
+
+        // Defining a layout manager for the recycle view
+        // Here we have used a LinearLayout Manager with horizontal scroll.
+        binding?.rvExerciseStatus?.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+
+        // As the adapter expects the exercises list and context so initialize it passing it.
+        exerciseAdapter = ExerciseStatusAdapter(exerciseList!!)
+
+        // Adapter class is attached to recycler view
+        binding?.rvExerciseStatus?.adapter = exerciseAdapter
     }
 }
