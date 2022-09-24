@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.development.mk.dailyworkout">
-
-    <!-- enable TTS for Android 11-->
+    <!-- enable TTS for Android 11 -->
     <queries>
         <intent>
             <action android:name="android.intent.action.TTS_SERVICE" />
@@ -17,10 +16,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DailyWorkOut">
         <activity
+            android:name=".FinishActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"/>
+        <activity
             android:name=".ExerciseActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.MaterialComponents.NoActionBar"/>
+            android:theme="@style/Theme.MaterialComponents.NoActionBar" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

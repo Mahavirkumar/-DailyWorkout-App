@@ -1,5 +1,6 @@
 package com.development.mk.dailyworkout
 
+import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -125,12 +126,12 @@ class ExerciseActivity : AppCompatActivity(),TextToSpeech.OnInitListener {
          *   {#onTick(long)} callbacks.
          */
         // Here we have started a timer of 10 seconds so the 10000 is milliseconds is 10 seconds and the countdown interval is 1 second so it 1000.
-        restTimer = object : CountDownTimer(10000, 1000) {
+        restTimer = object : CountDownTimer(1000, 100) {
             override fun onTick(millisUntilFinished: Long) {
                 restProgress++ // It is increased by 1
-                binding?.progressBar?.progress = 10 - restProgress // Indicates progress bar progress
+                binding?.progressBar?.progress = 1 - restProgress // Indicates progress bar progress
                 binding?.tvTimer?.text =
-                    (10 - restProgress).toString()  // Current progress is set to text view in terms of seconds.
+                    (1 - restProgress).toString()  // Current progress is set to text view in terms of seconds.
             }
 
             override fun onFinish() {
@@ -182,11 +183,11 @@ class ExerciseActivity : AppCompatActivity(),TextToSpeech.OnInitListener {
 
         binding?.progressBarExercise?.progress = exerciseProgress
 
-        exerciseTimer = object : CountDownTimer(40000, 1000) {
+        exerciseTimer = object : CountDownTimer(1000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 exerciseProgress++
-                binding?.progressBarExercise?.progress = 40 - exerciseProgress
-                binding?.tvTimerExercise?.text = (40 - exerciseProgress).toString()
+                binding?.progressBarExercise?.progress = 10 - exerciseProgress
+                binding?.tvTimerExercise?.text = (10 - exerciseProgress).toString()
             }
 
             override fun onFinish() {
@@ -194,19 +195,15 @@ class ExerciseActivity : AppCompatActivity(),TextToSpeech.OnInitListener {
 
                 //  We have changed the status of the selected item and updated the status of that, so that the position is set as completed in the exercise list.)
 
-                exerciseList!![currentExercisePosition].isSelected=false // exercise is completed so selection is set to false
-                exerciseList!![currentExercisePosition].isCompleted=true // updating in the list that this exercise is completed
-                exerciseAdapter!!.notifyDataSetChanged() // Notifying the adapter class.
-
                 if (currentExercisePosition < exerciseList?.size!! - 1) {
+                    exerciseList!![currentExercisePosition].isSelected=false // exercise is completed so selection is set to false
+                    exerciseList!![currentExercisePosition].isCompleted=true // updating in the list that this exercise is completed
+                    exerciseAdapter?.notifyDataSetChanged()
                     setupRestView()
                 } else {
-
-                    Toast.makeText(
-                        this@ExerciseActivity,
-                        "Congratulations! You have completed the 10 minutes workout.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    finish()
+                    val intent = Intent(this@ExerciseActivity,FinishActivity::class.java)
+                    startActivity(intent)
                 }
             }
         }.start()
