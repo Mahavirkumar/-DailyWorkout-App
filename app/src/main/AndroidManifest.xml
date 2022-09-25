@@ -16,10 +16,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DailyWorkOut">
         <activity
-            android:name=".FinishActivity"
+            android:name=".BMIActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"/>
+        <activity
+            android:name=".FinishActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar" />
         <activity
             android:name=".ExerciseActivity"
             android:exported="false"
