@@ -1,6 +1,9 @@
 package com.development.mk.dailyworkout
 
+import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.media.MediaPlayer
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +15,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.development.mk.dailyworkout.databinding.ActivityExerciseBinding
+import com.development.mk.dailyworkout.databinding.DialogCustomBackConfirmationBinding
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -49,7 +53,7 @@ class ExerciseActivity : AppCompatActivity(),TextToSpeech.OnInitListener {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
         }
         binding?.toolbarExercise?.setNavigationOnClickListener {
-            onBackPressed()
+            customDialogForBackButton()
         }
         tts = TextToSpeech(this, this)
 
@@ -126,12 +130,12 @@ class ExerciseActivity : AppCompatActivity(),TextToSpeech.OnInitListener {
          *   {#onTick(long)} callbacks.
          */
         // Here we have started a timer of 10 seconds so the 10000 is milliseconds is 10 seconds and the countdown interval is 1 second so it 1000.
-        restTimer = object : CountDownTimer(1000, 100) {
+        restTimer = object : CountDownTimer(10000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 restProgress++ // It is increased by 1
-                binding?.progressBar?.progress = 1 - restProgress // Indicates progress bar progress
+                binding?.progressBar?.progress = 10 - restProgress // Indicates progress bar progress
                 binding?.tvTimer?.text =
-                    (1 - restProgress).toString()  // Current progress is set to text view in terms of seconds.
+                    (10 - restProgress).toString()  // Current progress is set to text view in terms of seconds.
             }
 
             override fun onFinish() {
@@ -183,11 +187,11 @@ class ExerciseActivity : AppCompatActivity(),TextToSpeech.OnInitListener {
 
         binding?.progressBarExercise?.progress = exerciseProgress
 
-        exerciseTimer = object : CountDownTimer(1000, 1000) {
+        exerciseTimer = object : CountDownTimer(40000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 exerciseProgress++
-                binding?.progressBarExercise?.progress = 10 - exerciseProgress
-                binding?.tvTimerExercise?.text = (10 - exerciseProgress).toString()
+                binding?.progressBarExercise?.progress = 40 - exerciseProgress
+                binding?.tvTimerExercise?.text = (40 - exerciseProgress).toString()
             }
 
             override fun onFinish() {
@@ -275,5 +279,30 @@ class ExerciseActivity : AppCompatActivity(),TextToSpeech.OnInitListener {
 
         // Adapter class is attached to recycler view
         binding?.rvExerciseStatus?.adapter = exerciseAdapter
+    }
+    private fun customDialogForBackButton() {
+        val customDialog = Dialog(this)
+
+
+        val dialogBinding = DialogCustomBackConfirmationBinding.inflate(layoutInflater)
+        /*Set the screen content from a layout resource.
+         The resource will be inflated, adding all top-level views to the screen.*/
+
+        customDialog.setContentView(dialogBinding.root)
+        //to ensure that the user clicks one of the button and that the dialog is
+        //not dismissed when surrounding parts of the screen is clicked
+        customDialog.setCanceledOnTouchOutside(false)
+
+        dialogBinding.tvYes.setOnClickListener {
+            // We need to specify that we are finishing this activity if not the player
+            // continues beeping even after the screen is not visibile
+            this@ExerciseActivity.finish()
+            customDialog.dismiss()
+        }
+        dialogBinding.tvNo.setOnClickListener {
+            customDialog.dismiss()
+        }
+        //Start the dialog and display it on screen.
+        customDialog.show()
     }
 }
