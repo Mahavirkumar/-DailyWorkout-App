@@ -10,6 +10,14 @@ import java.math.RoundingMode
 
 class BMIActivity : AppCompatActivity() {
 
+    companion object {
+        private const val METRIC_UNITS_VIEW = "METRIC_UNIT_VIEW" // Metric Unit View
+        private const val US_UNITS_VIEW = "US_UNIT_VIEW" // US Unit View
+    }
+
+    private var currentVisibleView: String =
+        METRIC_UNITS_VIEW // A variable to hold a value to make a selected view visible
+
     private var binding: ActivityBmiactivityBinding? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,26 +39,113 @@ class BMIActivity : AppCompatActivity() {
         // Button will calculate the input values in Metric Units
         binding?.btnCalculateUnits?.setOnClickListener {
 
-            // The values are validated.
-            if (validateMetricUnits()) {
+            if (currentVisibleView == METRIC_UNITS_VIEW) {
+                // The values are validated.
+                if (validateMetricUnits()) {
 
-                // The height value is converted to a float value and divided by 100 to convert it to meter.
-                val heightValue: Float = binding?.etMetricUnitHeight?.text.toString().toFloat() / 100
+                    // The height value is converted to a float value and divided by 100 to convert it to meter.
+                    val heightValue: Float =
+                        binding?.etMetricUnitHeight?.text.toString().toFloat() / 100
 
-                // The weight value is converted to a float value
-                val weightValue: Float = binding?.etMetricUnitWeight?.text.toString().toFloat()
+                    // The weight value is converted to a float value
+                    val weightValue: Float = binding?.etMetricUnitWeight?.text.toString().toFloat()
 
-                // BMI value is calculated in METRIC UNITS using the height and weight value.
-                val bmi = weightValue / (heightValue * heightValue)
+                    // BMI value is calculated in METRIC UNITS using the height and weight value.
+                    val bmi = weightValue / (heightValue * heightValue)
 
-                displayBMIResult(bmi)
+                    displayBMIResult(bmi)
+                } else {
+                    Toast.makeText(
+                        this@BMIActivity,
+                        "Please enter valid values.",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
+            }else{
+                // The values are validated.
+                if (validateUsUnits()) {
+
+                    val usUnitHeightValueFeet: String =
+                        binding?.etUsMetricUnitHeightFeet?.text.toString() // Height Feet value entered in EditText component.
+                    val usUnitHeightValueInch: String =
+                        binding?.etUsMetricUnitHeightInch?.text.toString() // Height Inch value entered in EditText component.
+                    val usUnitWeightValue: Float = binding?.etMetricUnitWeight?.text.toString()
+                        .toFloat() // Weight value entered in EditText component.
+
+                    // Here the Height Feet and Inch values are merged and multiplied by 12 for converting it to inches.
+                    val heightValue =
+                        usUnitHeightValueInch.toFloat() + usUnitHeightValueFeet.toFloat() * 12
+
+                    // This is the Formula for US UNITS result.
+                    // Reference Link : https://www.cdc.gov/healthyweight/assessing/bmi/childrens_bmi/childrens_bmi_formula.html
+                    val bmi = 703 * (usUnitWeightValue / (heightValue * heightValue))
+
+                    displayBMIResult(bmi) // Displaying the result into UI
+                } else {
+                    Toast.makeText(
+                        this@BMIActivity,
+                        "Please enter valid values.",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
+            }
+        }
+
+        binding?.rgUnits?.setOnCheckedChangeListener { _, checkedId: Int ->
+
+            // Here if the checkId is METRIC UNITS view then make the view visible else US UNITS view.
+            if (checkedId == R.id.rbMetricUnits) {
+                makeVisibleMetricUnitsView()
             } else {
-                Toast.makeText(this@BMIActivity, "Please enter valid values.", Toast.LENGTH_SHORT)
-                    .show()
+                makeVisibleUsUnitsView()
             }
         }
     }
 
+    /**
+     * Function is used to make the METRIC UNITS VIEW visible and hide the US UNITS VIEW.
+     */
+    private fun makeVisibleMetricUnitsView() {
+        currentVisibleView = METRIC_UNITS_VIEW // Current View is updated here.
+        binding?.tilMetricUnitWeight?.visibility = View.VISIBLE // METRIC  Height UNITS VIEW is Visible
+        binding?.tilMetricUnitHeight?.visibility = View.VISIBLE // METRIC  Weight UNITS VIEW is Visible
+//        binding?.tilMetricUnitWeight?.visibility = View.GONE // make weight view Gone.
+        binding?.tilMetricUsUnitHeightFeet?.visibility = View.GONE // make height feet view Gone.
+        binding?.tilMetricUsUnitHeightInch?.visibility = View.GONE // make height inch view Gone.
+
+        binding?.etMetricUnitHeight?.text!!.clear() // height value is cleared if it is added.
+        binding?.etMetricUnitWeight?.text!!.clear() // weight value is cleared if it is added.
+
+        binding?.tvYourBMI?.visibility=View.INVISIBLE
+        binding?.tvBMIType?.visibility=View.INVISIBLE
+        binding?.tvBMIValue?.visibility=View.INVISIBLE
+        binding?.tvBMIDescription?.visibility=View.INVISIBLE
+
+//        binding?.llDiplayBMIResult?.visibility = View.INVISIBLE
+    }
+
+    private fun makeVisibleUsUnitsView() {
+        currentVisibleView = US_UNITS_VIEW // Current View is updated here.
+        binding?.tilMetricUnitHeight?.visibility = View.INVISIBLE // METRIC  Height UNITS VIEW is InVisible
+//        binding?.tilMetricUnitWeight?.visibility = View.INVISIBLE // METRIC  Weight UNITS VIEW is InVisible
+//        binding?.tilUsMetricUnitWeight?.visibility = View.VISIBLE // make weight view visible.
+        binding?.tilMetricUsUnitHeightFeet?.visibility = View.VISIBLE // make height feet view visible.
+        binding?.tilMetricUsUnitHeightInch?.visibility = View.VISIBLE // make height inch view visible.
+
+//        binding?.etUsMetricUnitWeight?.text!!.clear() // weight value is cleared.
+        binding?.etUsMetricUnitHeightFeet?.text!!.clear() // height feet value is cleared.
+        binding?.etUsMetricUnitHeightInch?.text!!.clear() // height inch is cleared.
+
+        binding?.tvYourBMI?.visibility=View.INVISIBLE
+        binding?.tvBMIType?.visibility=View.INVISIBLE
+        binding?.tvBMIValue?.visibility=View.INVISIBLE
+        binding?.tvBMIDescription?.visibility=View.INVISIBLE
+
+//        binding?.llDiplayBMIResult?.visibility = View.INVISIBLE
+    }
+    
 
     //  Validating the METRIC UNITS CALCULATION input.
     /**
@@ -63,6 +158,27 @@ class BMIActivity : AppCompatActivity() {
             isValid = false
         } else if (binding?.etMetricUnitHeight?.text.toString().isEmpty()) {
             isValid = false
+        }
+
+        return isValid
+    }
+
+    /**
+     * Function is used to validate the input values for US UNITS.
+     */
+    private fun validateUsUnits(): Boolean {
+        var isValid = true
+
+        when {
+            binding?.etMetricUnitWeight?.text.toString().isEmpty() -> {
+                isValid = false
+            }
+            binding?.etUsMetricUnitHeightFeet?.text.toString().isEmpty() -> {
+                isValid = false
+            }
+            binding?.etUsMetricUnitHeightInch?.text.toString().isEmpty() -> {
+                isValid = false
+            }
         }
 
         return isValid
@@ -125,4 +241,6 @@ class BMIActivity : AppCompatActivity() {
         binding?.tvBMIType?.text = bmiLabel // Label is set to TextView
         binding?.tvBMIDescription?.text = bmiDescription // Description is set to TextView
     }
+
+
 }
