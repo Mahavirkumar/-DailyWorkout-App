@@ -6,6 +6,14 @@ An App for making pepole workout for atleast 10 min daily with CountDown Timer, 
  
  https://user-images.githubusercontent.com/42721155/193413707-142cd067-1cbb-4088-850e-b2729e94573c.mp4
  
+ 
+ <img src="https://user-images.githubusercontent.com/42721155/193417969-83e81b4a-5ea6-4819-b9fb-283775559ac7.jpeg" align="left" width="180" height="400" />
+<p align="center">
+  <img width="180" height="400" src="https://user-images.githubusercontent.com/42721155/193417970-b8a83b4f-a2d2-437c-a2d5-dbc70456f416.jpeg">
+</p>
+<img src="https://user-images.githubusercontent.com/42721155/193417972-7edc5560-db53-4744-9573-ee2c63c4da90.jpeg" align="right" width="180" height="400" />
+ 
+ <img src="https://user-images.githubusercontent.com/42721155/193417974-a6d30817-30a8-488a-9693-1dc5ca77568b.jpeg" align="left" width="180" height="400" />
 
 
 <img src="https://user-images.githubusercontent.com/42721155/193413838-b705c79d-0b86-4f35-9dd0-fe02e40427e8.jpeg" align="left" width="180" height="400" />
