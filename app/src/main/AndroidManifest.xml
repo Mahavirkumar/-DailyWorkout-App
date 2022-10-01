@@ -10,16 +10,22 @@
 
     <application
         android:allowBackup="true"
+        android:name=".WorkOutApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DailyWorkOut">
         <activity
-            android:name=".BMIActivity"
+            android:name=".HistoryActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"/>
+        <activity
+            android:name=".BMIActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar" />
         <activity
             android:name=".FinishActivity"
             android:exported="false"
