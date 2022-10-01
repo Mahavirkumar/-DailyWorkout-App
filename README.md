@@ -2,10 +2,10 @@
 An App for making pepole workout for atleast 10 min daily with CountDown Timer, Text To Speech Feature, BMI Calculator, History Features.
 
 
-<img src="https://user-images.githubusercontent.com/42721155/193413788-be676e94-8fe8-4a90-9f74-3d34253e420e.jpeg" align="left" width="180" height="400" />
-<p align="center">
-  <img width="180" height="400" src="https://user-images.githubusercontent.com/42721155/193413707-142cd067-1cbb-4088-850e-b2729e94573c.mp4">
-</p>
+
+ 
+ https://user-images.githubusercontent.com/42721155/193413707-142cd067-1cbb-4088-850e-b2729e94573c.mp4
+ 
 
 
 <img src="https://user-images.githubusercontent.com/42721155/193413838-b705c79d-0b86-4f35-9dd0-fe02e40427e8.jpeg" align="left" width="180" height="400" />
@@ -28,3 +28,5 @@ An App for making pepole workout for atleast 10 min daily with CountDown Timer, 
   <img width="180" height="400" src="https://user-images.githubusercontent.com/42721155/193413815-f4db99eb-80cd-4878-adef-8cb5215bb2f8.jpeg">
 </p>
 <img src="https://user-images.githubusercontent.com/42721155/193413837-8c74945b-8743-4a2f-9e27-ae97e86935b7.jpeg" align="right" width="180" height="400" />
+
+<img src="https://user-images.githubusercontent.com/42721155/193413788-be676e94-8fe8-4a90-9f74-3d34253e420e.jpeg" align="left" width="180" height="400" />
